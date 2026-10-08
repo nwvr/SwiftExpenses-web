@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Claim the daily per-diem allowance for each day of a trip.">
+  <title>Add meals and incidentals (MS&amp;IE)</title>
+  <link rel="stylesheet" href="../shared/help.css">
+</head>
+<body>
+<h1>Add meals and incidentals (MS&amp;IE)</h1>
+
+<p class="intro">MS&amp;IE is the daily allowance for meals and incidental expenses. SwiftExpenses works it out for each day of a trip from the official per-diem rates.</p>
+<ol>
+  <li>Select the report in the sidebar, then click <strong>MS&amp;IE</strong> at the top.</li>
+  <li>Check the trip start and end dates. They come from the travel itself: the first and last day of the flights, trains, hotel stays and rental cars. Rides, meals and other one-day receipts don’t change them, so an Uber home after midnight doesn’t add a day. When the saved days differ from the travel dates, <strong>Use Travel Dates</strong> sets them; the first and last day become travel days.</li>
+  <li>For each day, check the city and country, and select the meals that were provided to you (B for breakfast, L for lunch, D for dinner). Each day’s location comes from the hotel stay of that night; the last day uses the last hotel. Days marked <strong>No hotel</strong> (for example a stay with friends) take the location from a receipt of that day or the nearest hotel stay, so check them. <strong>Fill Locations from Hotels</strong> sets all days again from the hotel stays.</li>
+  <li>Click <strong>Save MS&amp;IE</strong>.</li>
+</ol>
+<h2>How the amount is calculated</h2>
+<ul>
+  <li><strong>Rate:</strong> GSA rates for places in the United States. GSA lists areas by city and county: a town it doesn’t name gets the rate of its county’s area (the county is looked up once with OpenStreetMap), and a town in no listed area gets the standard rate; State Department rates for other countries.</li>
+  <li><strong>Travel days:</strong> the first and last day of a trip are selected as travel days and get 75% of the rate (41 CFR 301-11.20). You can change which days are travel days.</li>
+  <li><strong>Provided meals:</strong> a provided meal is deducted using the official breakdown: GSA’s M&amp;IE breakdown in the US (for example $80 = breakfast $20, lunch $22, dinner $33, incidentals $5) and GSA’s foreign breakdown table abroad (above $265: breakfast 15%, lunch 25%, dinner 40%). A day never drops below the incidental expenses amount. Meals served on a plane or train and free hotel breakfasts are not deducted (41 CFR 301-11.21).</li>
+  <li><strong>None:</strong> select None for a day with no allowance at all.</li>
+</ul>
+<p>After changing a city, state or country, press Return to look up the rate again. Click <strong>Recalculate</strong> to redo every day.</p>
+<h2>Reports without MS&amp;IE</h2>
+<p>Turn on <strong>This report does not include MS&amp;IE</strong> at the top of the report. The report’s MS&amp;IE total is then $0, in both the report and the Summary.</p>
+
+<div class="related"><p><a href="../index.html">SwiftExpenses Help</a></p><p><a href="libraries.html">Open or create a library</a></p><p><a href="add-receipt.html">Add a receipt</a></p><p><a href="unassigned.html">Collect receipts now, assign them to a trip later</a></p><p><a href="mail.html">Find receipts in Mail (Mac)</a></p><p><a href="mileage.html">Claim personal car mileage</a></p><p><a href="submissions.html">Submit reports for review</a></p><p><a href="edit-expense.html">View, change or delete an expense</a></p><p><a href="icloud.html">Use your expenses on iPhone and Mac</a></p><p><a href="web.html">Use SwiftExpenses in a web browser</a></p><p><a href="currency.html">Expenses in other currencies</a></p><p><a href="export.html">Export and email a report</a></p><p><a href="summary.html">See totals and the summary</a></p><p><a href="policy.html">Travel expense policy</a></p><p><a href="rates.html">Where the rates come from</a></p><p><a href="reset.html">Remove everything from a library</a></p></div>
+</body>
+</html>

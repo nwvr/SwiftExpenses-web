@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The rules SwiftExpenses follows, why, and what to do if your company’s policy differs.">
+  <title>Travel expense policy</title>
+  <link rel="stylesheet" href="../shared/help.css">
+</head>
+<body>
+<h1>Travel expense policy</h1>
+
+<p class="intro">SwiftExpenses follows the US federal travel rules: the Federal Travel Regulation (FTR) with the per-diem rates of GSA and the State Department, the US Treasury exchange rates and the IRS standard mileage rate. These are the rules the IRS accepts for reimbursing travel without receipts for every meal, so following them is the safe way to stay within the IRS rules.</p>
+
+<h2>Why these rules</h2>
+<p>Under an accountable plan, the IRS treats meals and incidental expenses (M&amp;IE) paid at no more than the federal per-diem rate for the locality of travel as substantiated: no meal receipts are needed, only the time, place and business purpose of the travel (IRS Revenue Procedure 2019-48, section 4). The federal rates are GSA’s in the continental US and the State Department’s abroad (section 3.02), applied as under the Federal Travel Regulation (section 6.01). For the first and last day, the IRS accepts the FTR’s 75% (section 6.04). Business use of a personal vehicle at the IRS standard mileage rate is accepted instead of the actual car costs, with parking fees and tolls deductible in addition (Revenue Procedure 2019-46). Amounts above these rates, or paid without the travel details, can become taxable income.</p>
+<p>Some FTR rules are stricter than the IRS requires: the IRS does not require provided meals to be deducted (Rev. Proc. 2019-48, section 6.03) and accepts other consistent methods for partial days (section 6.04). SwiftExpenses applies the stricter FTR rules, which keeps every amount within the IRS limits.</p>
+
+<h2>The policy SwiftExpenses applies</h2>
+<ol>
+  <li><strong>Lodging</strong> is claimed at its actual cost, with the hotel receipt (folio). It is not paid as a per diem.</li>
+  <li><strong>Meals and incidentals</strong> are claimed as a daily per diem, not with meal receipts:
+    <ul>
+      <li>In the United States: the GSA rate of the area (city, else county, else the standard rate).</li>
+      <li>Abroad: the State Department rate of the city, else the country’s [Other] rate.</li>
+      <li>Rates are those in effect on the day (GSA by fiscal year, State Department by month).</li>
+    </ul>
+  </li>
+  <li><strong>Location of a day:</strong> the place of your business (the temporary duty location) sets the rate (41 CFR 301-11.4). SwiftExpenses takes it from the hotel stay of that night, because you normally stay where your business is; if your hotel is in another town, set the day’s city to the business location (a lodging-location rate needs your employer’s approval). Nights without lodging (overnight flights, travelling out and home) use the trip’s location.</li>
+  <li><strong>Only away from home:</strong> M&amp;IE is paid only when you travel away from your official station (tax home) for more than 12 hours (41 CFR 301-11.1). There is no M&amp;IE at your home location. A day trip of more than 12 but less than 24 hours gets 75%; a trip of 12 hours or less gets none — select <strong>None</strong>.</li>
+  <li><strong>First and last day</strong> of a trip of 24 hours or more are paid at 75%; days in between are full days, including days in the air (41 CFR 301-11.20).</li>
+  <li><strong>Trip dates</strong> come from the flights, trains, hotel stays and rental cars — not from rides or receipts dated after you got home.</li>
+  <li><strong>Meals provided</strong> (by a conference, included in a registration fee, or by a host) are deducted at the official breakdown: GSA’s M&amp;IE breakdown in the US (for example $80 = breakfast $20, lunch $22, dinner $33, incidentals $5) and GSA’s foreign breakdown table abroad (above $265: breakfast 15%, lunch 25%, dinner 40%). A day never drops below the incidental expenses amount. Meals served on a plane or train and free hotel breakfasts are not deducted (41 CFR 301-11.21).</li>
+  <li><strong>Foreign currency</strong> is converted to US dollars at the US Treasury reporting rate in effect on the expense date.</li>
+  <li><strong>Personal vehicle</strong> use is paid at the IRS standard mileage rate for the trip date, for the driving distance, with the purpose and route recorded. Fuel, oil and maintenance are not claimed separately; parking and tolls can be.</li>
+  <li><strong>Records</strong>: every expense keeps its receipt PDF; per diem days keep their location and rate source; exported reports list the data sources and when the rates were last updated.</li>
+</ol>
+<p>See <a href="rates.html">Where the rates come from</a> for the official sources.</p>
+
+<h2>If your company’s policy is different</h2>
+<div class="note"><strong>Important:</strong> SwiftExpenses implements the federal rules above. It does <strong>not</strong> know your employer’s own travel policy, and if that policy differs, the amounts SwiftExpenses calculates may not comply with it. Examples of company rules SwiftExpenses does not apply:
+<ul>
+  <li>Meals reimbursed at actual cost with receipts, or a company per diem, instead of the federal rates.</li>
+  <li>A different rule for the first and last day (for example 100%, or by departure and arrival time).</li>
+  <li>Caps on hotel rates, rental cars or classes of travel; required booking channels or pre-approval.</li>
+  <li>A mileage rate other than the IRS rate, or exchange rates from another source (for example your credit card statement).</li>
+  <li>Rules for personal days added to a business trip.</li>
+</ul>
+You are responsible for checking your report against your company’s policy. You can change a day’s location, travel day and meals, mark a report as having no MS&amp;IE, and edit any expense by hand. SwiftExpenses is not tax or legal advice; ask your finance department or tax advisor when in doubt.</div>
+
+<div class="related"><p><a href="../index.html">SwiftExpenses Help</a></p><p><a href="libraries.html">Open or create a library</a></p><p><a href="add-receipt.html">Add a receipt</a></p><p><a href="unassigned.html">Collect receipts now, assign them to a trip later</a></p><p><a href="mail.html">Find receipts in Mail (Mac)</a></p><p><a href="mileage.html">Claim personal car mileage</a></p><p><a href="submissions.html">Submit reports for review</a></p><p><a href="edit-expense.html">View, change or delete an expense</a></p><p><a href="icloud.html">Use your expenses on iPhone and Mac</a></p><p><a href="web.html">Use SwiftExpenses in a web browser</a></p><p><a href="currency.html">Expenses in other currencies</a></p><p><a href="msie.html">Add meals and incidentals (MS&amp;IE)</a></p><p><a href="export.html">Export and email a report</a></p><p><a href="summary.html">See totals and the summary</a></p><p><a href="rates.html">Where the rates come from</a></p><p><a href="reset.html">Remove everything from a library</a></p></div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Add a trip in your own car at the IRS standard mileage rate.">
+  <title>Claim personal car mileage</title>
+  <link rel="stylesheet" href="../shared/help.css">
+</head>
+<body>
+<h1>Claim personal car mileage</h1>
+
+<p class="intro">For a business trip in your own car, SwiftExpenses works out the amount at the IRS standard mileage rate and creates a PDF that serves as the receipt.</p>
+<ol>
+  <li>Click <strong>Car Mileage</strong> in the toolbar (or choose <span class="menu">File &gt; New Car Mileage</span>, <kbd>⌥⌘N</kbd>). In a report, <strong>Add Car Mileage</strong> fills in that report.</li>
+  <li>Enter the date, the purpose of the trip, and the start and end addresses. Select <strong>Round trip</strong> if you drove back.</li>
+  <li>Click <strong>Calculate Distance</strong>. The apps use the Apple Maps driving route; the web app uses OpenStreetMap. You can change the miles.</li>
+  <li>Click <strong>Save</strong>. The expense is added as Fuel/MLG in US dollars, with the route in From → To, and a one-page mileage PDF as its receipt.</li>
+</ol>
+<h2>The rate and where it comes from</h2>
+<ul>
+  <li><strong>Source:</strong> the IRS <a href="https://www.irs.gov/tax-professionals/standard-mileage-rates">standard mileage rates</a> for business use of a personal vehicle, as announced in the IRS news releases and notices (for example IR-2025-128 for January–June 2026 and IR-2026-29 from July 1, 2026).</li>
+  <li><strong>Which rate:</strong> the rate in effect on the date of the trip. Usually the IRS sets one rate per calendar year; in some years it changes mid-year (2022, and 2026: 72.5 cents per mile through June 30, 76 cents from July 1).</li>
+  <li><strong>Amount:</strong> miles × rate, rounded to the cent. A round trip counts the one-way distance twice.</li>
+  <li><strong>What the rate covers:</strong> all costs of running the car (fuel, oil, maintenance, depreciation, insurance). Don’t also claim fuel receipts for the same trip; parking fees and tolls can be claimed separately.</li>
+  <li><strong>Distance:</strong> the driving route from Apple Maps (apps) or OpenStreetMap (web app); the PDF states which one, or that you entered the miles yourself.</li>
+  <li><strong>Records:</strong> the mileage PDF shows the date, purpose, start and end address, distance, rate (with its IRS source) and amount, which is what the IRS asks you to keep for business mileage. The same source is written in the expense’s remark, so it also appears in the Excel export.</li>
+</ul>
+<p>SwiftExpenses reads the rate table on irs.gov every week and adds new rates automatically; the rates are kept on your device, so this also works offline. See <a href="rates.html">Where the rates come from</a>.</p>
+
+<div class="related"><p><a href="../index.html">SwiftExpenses Help</a></p><p><a href="libraries.html">Open or create a library</a></p><p><a href="add-receipt.html">Add a receipt</a></p><p><a href="unassigned.html">Collect receipts now, assign them to a trip later</a></p><p><a href="mail.html">Find receipts in Mail (Mac)</a></p><p><a href="submissions.html">Submit reports for review</a></p><p><a href="edit-expense.html">View, change or delete an expense</a></p><p><a href="icloud.html">Use your expenses on iPhone and Mac</a></p><p><a href="web.html">Use SwiftExpenses in a web browser</a></p><p><a href="currency.html">Expenses in other currencies</a></p><p><a href="msie.html">Add meals and incidentals (MS&amp;IE)</a></p><p><a href="export.html">Export and email a report</a></p><p><a href="summary.html">See totals and the summary</a></p><p><a href="policy.html">Travel expense policy</a></p><p><a href="rates.html">Where the rates come from</a></p><p><a href="reset.html">Remove everything from a library</a></p></div>
+</body>
+</html>

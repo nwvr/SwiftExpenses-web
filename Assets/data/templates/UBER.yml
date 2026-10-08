@@ -1,0 +1,16 @@
+issuer: UBER
+fields:
+  date:
+    regex: \d{1,2}[./-]\d{1,2}[./-]\d{2,4}
+    type: date
+  amount:
+    regex: \d+\.\d{2}
+    type: float
+  currency:
+    regex: $
+    type: string
+keywords:
+- INVOICE
+- RECEIPT
+- PAYMENT
+- UBER

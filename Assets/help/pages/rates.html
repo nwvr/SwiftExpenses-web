@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The official sources and rules for per-diem (MS&amp;amp;IE), exchange and mileage rates.">
+  <title>Where the rates come from</title>
+  <link rel="stylesheet" href="../shared/help.css">
+</head>
+<body>
+<h1>Where the rates come from</h1>
+
+<p class="intro">SwiftExpenses uses only official US government rates. It checks the sources every week, keeps the tables on your device for offline use, and the Data Sources page of an exported report shows when they were last updated.</p>
+
+<p>The rules SwiftExpenses applies with these rates are listed in <a href="policy.html">Travel expense policy</a>.</p>
+
+<h2>MS&amp;IE in the United States: GSA</h2>
+<ul>
+  <li><strong>Source:</strong> the US General Services Administration <a href="https://www.gsa.gov/travel/plan-book/per-diem-rates">per diem rates</a>, read from GSA’s per-diem API (api.gsa.gov). Rates are set per federal fiscal year, which runs from October 1 to September 30.</li>
+  <li><strong>Which rate:</strong> GSA lists “non-standard areas” by city and county. SwiftExpenses uses, in this order: the area that names the city (for example “Boston / Cambridge”); otherwise the area that covers the city’s <strong>county</strong> (for example Lexington, MA is in Middlesex County, part of “Burlington / Woburn”); otherwise the <strong>standard CONUS rate</strong> ($68 for meals and incidentals in 2026). It never uses the rate of a nearby city.</li>
+  <li><strong>Counties:</strong> taken from the US Census Bureau’s list of places and towns, built into SwiftExpenses (no internet needed). Places not on it are looked up once with OpenStreetMap and remembered on your device.</li>
+</ul>
+
+<h2>MS&amp;IE abroad: State Department</h2>
+<ul>
+  <li><strong>Source:</strong> the US Department of State, Office of Allowances, <a href="https://aoprals.state.gov/web920/per_diem.asp">foreign per diem rates</a>, published monthly (the “Per Diem” workbook of the month).</li>
+  <li><strong>Which rate:</strong> the rate listed for the city in that country; otherwise the country’s <strong>[Other]</strong> rate, which applies to every place the State Department doesn’t list. (The Python app used the country’s highest rate instead; SwiftExpenses corrected that.)</li>
+</ul>
+
+<h2>How a day’s MS&amp;IE is calculated</h2>
+<ul>
+  <li><strong>Location of a day:</strong> the business (temporary duty) location sets the rate (41 CFR 301-11.4); SwiftExpenses takes it from the hotel stay of that night, and the last day of the trip uses the last stay. If your hotel is in another town than your business, set the day’s city to the business location. Days without a hotel (for example a private stay) are marked <strong>No hotel</strong>; they use a receipt of that day, or the nearest hotel stay, and should be checked. Days before the first and after the last hotel stay (travelling out and home, overnight flights) always use the trip’s location: there is no MS&amp;IE for your home location, so a receipt from your home airport never sets the rate.</li>
+  <li><strong>First and last day:</strong> 75% of the daily rate (Federal Travel Regulation, 41 CFR 301-11.20). A day trip of more than 12 hours also gets 75%; 12 hours or less gets none (select None). Untick <strong>Travel</strong> for a full day.</li>
+  <li><strong>Meals provided</strong> (by a conference, included in a registration fee, or by a host) are deducted at the official breakdown: GSA’s M&amp;IE breakdown in the US (for example $80 = breakfast $20, lunch $22, dinner $33, incidentals $5) and GSA’s foreign breakdown table abroad (above $265: breakfast 15%, lunch 25%, dinner 40%). A day never drops below the incidental expenses amount. Meals served on a plane or train and free hotel breakfasts are not deducted (41 CFR 301-11.21). The breakdown tables are read from <a href="https://www.gsa.gov/mie">gsa.gov/mie</a> with the weekly update.</li>
+  <li><strong>None</strong> sets the day to $0, for example when all meals were covered.</li>
+</ul>
+
+<h2>Exchange rates: US Treasury</h2>
+<ul>
+  <li><strong>Source:</strong> the Treasury Reporting Rates of Exchange from the Bureau of the Fiscal Service (<a href="https://fiscaldata.treasury.gov/datasets/treasury-reporting-rates-exchange/">fiscaldata.treasury.gov</a>), published quarterly with amendments in between.</li>
+  <li><strong>Which rate:</strong> the latest rate published on or before the expense’s start date for that currency. See <a href="currency.html">Expenses in other currencies</a>.</li>
+</ul>
+
+<h2>Personal vehicle: IRS standard mileage rate</h2>
+<ul>
+  <li><strong>Source:</strong> the IRS <a href="https://www.irs.gov/tax-professionals/standard-mileage-rates">standard mileage rates</a> for business use.</li>
+  <li><strong>Which rate:</strong> the rate in effect on the trip date. See <a href="mileage.html">Claim personal car mileage</a>.</li>
+</ul>
+
+<div class="related"><p><a href="../index.html">SwiftExpenses Help</a></p><p><a href="libraries.html">Open or create a library</a></p><p><a href="add-receipt.html">Add a receipt</a></p><p><a href="unassigned.html">Collect receipts now, assign them to a trip later</a></p><p><a href="mail.html">Find receipts in Mail (Mac)</a></p><p><a href="mileage.html">Claim personal car mileage</a></p><p><a href="submissions.html">Submit reports for review</a></p><p><a href="edit-expense.html">View, change or delete an expense</a></p><p><a href="icloud.html">Use your expenses on iPhone and Mac</a></p><p><a href="web.html">Use SwiftExpenses in a web browser</a></p><p><a href="currency.html">Expenses in other currencies</a></p><p><a href="msie.html">Add meals and incidentals (MS&amp;IE)</a></p><p><a href="export.html">Export and email a report</a></p><p><a href="summary.html">See totals and the summary</a></p><p><a href="policy.html">Travel expense policy</a></p><p><a href="reset.html">Remove everything from a library</a></p></div>
+</body>
+</html>

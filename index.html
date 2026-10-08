@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="Assets/data/icon-32.png">
+  <link rel="apple-touch-icon" href="Assets/data/icon-180.png">
+  <title>SwiftExpenses</title>
+  <style>
+    :root {
+      --paper: #ffffff; --chrome: #f3f4f6; --panel: #f9f9fb; --hairline: #d1d5da;
+      --ink: #1d1d1f; --muted: #6e6e73; --accent: #0a64d8; --accent-soft: rgba(10,100,216,0.10);
+      --danger: #c62828; --row: #f5f7fb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --paper: #1e1e1e; --chrome: #2a2a2c; --panel: #252527; --hairline: #3a3a3c;
+        --ink: #f5f5f7; --muted: #a1a1a6; --accent: #3b8cff; --accent-soft: rgba(59,140,255,0.16);
+        --danger: #ff6b6b; --row: #262628; }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink);
+      font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    #status { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
+    .app { display: grid; grid-template-columns: 260px 1fr; grid-template-rows: auto 1fr; height: 100%; }
+    .toolbar { grid-column: 1 / 3; display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+      background: var(--chrome); border-bottom: 1px solid var(--hairline); flex-wrap: wrap; }
+    .toolbar .title { font-weight: 600; font-size: 14px; margin-right: 10px; }
+    .toolbar .spacer { flex: 1; }
+    .toolbar .note { color: var(--muted); font-size: 12px; }
+    button, .button { font: inherit; padding: 5px 11px; border-radius: 6px; border: 1px solid var(--hairline);
+      background: var(--paper); color: var(--ink); cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button.danger { color: var(--danger); }
+    button:disabled { opacity: 0.5; cursor: default; }
+    .sidebar { background: var(--panel); border-right: 1px solid var(--hairline); overflow: auto; padding: 8px 0; }
+    .sidebar .section { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding: 10px 14px 4px; }
+    .sidebar .item { padding: 6px 14px; cursor: pointer; border-radius: 6px; margin: 0 6px; }
+    .sidebar .item:hover { background: var(--accent-soft); }
+    .sidebar .item.on { background: var(--accent); color: #fff; }
+    .sidebar .item .sub { font-size: 11px; color: var(--muted); }
+    .sidebar .item.on .sub { color: rgba(255,255,255,.85); }
+    .main { overflow: auto; display: flex; flex-direction: column; min-width: 0; }
+    .content { padding: 16px 20px; flex: 1; min-width: 0; }
+    h1 { font-size: 22px; margin: 0 0 12px; }
+    .segmented { display: inline-flex; border: 1px solid var(--hairline); border-radius: 7px; overflow: hidden; }
+    .segmented button { border: 0; border-radius: 0; padding: 4px 14px; }
+    .segmented button.on { background: var(--accent); color: #fff; }
+    .bar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    table { border-collapse: collapse; width: 100%; }
+    th { text-align: left; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--hairline); padding: 6px 8px; white-space: nowrap; }
+    td { padding: 6px 8px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+    tr.click:hover td { background: var(--row); cursor: pointer; }
+    tr.on td { background: var(--accent-soft); }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tr.total td { font-weight: 600; }
+    td input[type=text] { width: 100%; min-width: 60px; }
+    input[type=text], input[type=number], input[type=date], select, textarea { font: inherit; padding: 4px 6px;
+      border: 1px solid var(--hairline); border-radius: 5px; background: var(--paper); color: var(--ink); }
+    .split { display: flex; gap: 16px; align-items: flex-start; }
+    .split > .grow { flex: 1; min-width: 0; overflow-x: auto; }
+    .panel { width: 380px; flex: none; border: 1px solid var(--hairline); border-radius: 10px; padding: 12px; background: var(--panel); }
+    .form { display: grid; grid-template-columns: 110px 1fr; gap: 6px 10px; align-items: center; }
+    .form label { color: var(--muted); text-align: right; }
+    .form .wide { grid-column: 1 / 3; }
+    .form input, .form select, .form textarea { width: 100%; }
+    .totals { border-top: 1px solid var(--hairline); padding: 10px 20px; background: var(--chrome); display: flex; flex-wrap: wrap; gap: 6px 20px; }
+    .totals .cat { display: flex; flex-direction: column; }
+    .totals .cat span:first-child { font-size: 11px; color: var(--muted); }
+    .totals b { font-variant-numeric: tabular-nums; }
+    .muted { color: var(--muted); }
+    .hint { font-size: 12px; color: var(--muted); }
+    .hint.error { color: var(--danger); }
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.28); display: flex; align-items: center; justify-content: center; z-index: 10; }
+    .dialog { background: var(--paper); border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      width: min(900px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 18px; }
+    .dialog h2 { margin: 0 0 12px; font-size: 17px; }
+    .dialog .buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    .drop { border: 2px dashed var(--hairline); border-radius: 10px; padding: 30px; text-align: center; color: var(--muted); }
+    .drop.on { border-color: var(--accent); color: var(--accent); }
+    iframe.pdf { width: 100%; height: 360px; border: 1px solid var(--hairline); border-radius: 8px; background: #fff; }
+    .busy { position: fixed; bottom: 16px; right: 16px; background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 8px; z-index: 20; }
+    .help iframe { width: 100%; height: 70vh; border: 0; }
+    @media (max-width: 760px) {
+      .app { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr; }
+      .sidebar { max-height: 30vh; border-right: 0; border-bottom: 1px solid var(--hairline); }
+      .split { flex-direction: column; }
+      .panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="status">Loading SwiftExpenses…</div>
+  <script>
+    // Browser services the Swift app calls through JavaScriptKit. Everything stays on this
+    // computer: libraries are kept in the browser's IndexedDB and saved as expenses.db files.
+    window.SE = {
+      // --- Library storage (IndexedDB) ---------------------------------------------------
+      _db: null,
+      openDB() {
+        if (this._db) return Promise.resolve(this._db);
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open("swiftexpenses", 1);
+          req.onupgradeneeded = () => req.result.createObjectStore("libraries");
+          req.onsuccess = () => { this._db = req.result; resolve(this._db); };
+          req.onerror = () => reject(req.error);
+        });
+      },
+      async load(name) {
+        const db = await this.openDB();
+        return new Promise((resolve, reject) => {
+          const r = db.transaction("libraries").objectStore("libraries").get(name);
+          r.onsuccess = () => resolve(r.result ? new Uint8Array(r.result) : null);
+          r.onerror = () => reject(r.error);
+        });
+      },
+      async save(name, bytes) {
+        const db = await this.openDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction("libraries", "readwrite");
+          tx.objectStore("libraries").put(bytes.slice().buffer, name);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error);
+        });
+      },
+      async list() {
+        const db = await this.openDB();
+        return new Promise((resolve, reject) => {
+          const r = db.transaction("libraries").objectStore("libraries").getAllKeys();
+          r.onsuccess = () => resolve(JSON.stringify(r.result));
+          r.onerror = () => reject(r.error);
+        });
+      },
+      async remove(name) {
+        const db = await this.openDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction("libraries", "readwrite");
+          tx.objectStore("libraries").delete(name);
+          tx.oncomplete = () => resolve(true);
+        });
+      },
+      timeZoneName() { return Intl.DateTimeFormat().resolvedOptions().timeZone; },
+      timeZoneOffset() { return new Date().getTimezoneOffset(); },
+      // --- Files ---------------------------------------------------------------------------
+      async saveFile(bytes, name, mime) {
+        if (window.showSaveFilePicker) {
+          try {
+            const ext = name.includes(".") ? "." + name.split(".").pop() : "";
+            const handle = await showSaveFilePicker({ suggestedName: name,
+              types: ext ? [{ description: name, accept: { [mime]: [ext] } }] : undefined });
+            const w = await handle.createWritable(); await w.write(bytes); await w.close();
+            return "saved";
+          } catch (e) { if (e.name === "AbortError") return "cancelled"; }
+        }
+        this.download(bytes, name, mime);
+        return "downloaded";
+      },
+      /** Esc closes the large receipt view. */
+      _viewerKeys: document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") { const b = document.querySelector('#receipt-viewer [data-action="close-viewer"]'); if (b) b.click(); }
+      }),
+      download(bytes, name, mime) {
+        const url = URL.createObjectURL(new Blob([bytes], { type: mime || "application/octet-stream" }));
+        const a = document.createElement("a"); a.href = url; a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+      },
+      showPDF(bytes) {
+        window.open(URL.createObjectURL(new Blob([bytes], { type: "application/pdf" })), "_blank");
+      },
+      pdfURL(bytes) { return URL.createObjectURL(new Blob([bytes], { type: "application/pdf" })); },
+      /** A picked file as {name, bytes}; a photo of a receipt becomes a one-page PDF (like the apps). */
+      async receiptFile(f) {
+        const bytes = new Uint8Array(await f.arrayBuffer());
+        if (!(f.type || "").startsWith("image/")) return { name: f.name, bytes };
+        try {
+          const url = URL.createObjectURL(f);
+          const img = await new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = url; });
+          const canvas = document.createElement("canvas"); canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+          canvas.getContext("2d").drawImage(img, 0, 0); URL.revokeObjectURL(url);
+          if (!window.jspdf) await this.script("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+          const scale = Math.min(1, 612 / img.naturalWidth, 792 / img.naturalHeight);
+          const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+          const doc = new window.jspdf.jsPDF({ unit: "pt", format: [w, h], orientation: w > h ? "landscape" : "portrait" });
+          doc.addImage(canvas.toDataURL("image/jpeg", 0.85), "JPEG", 0, 0, w, h);
+          return { name: f.name.replace(/\.[^.]+$/, "") + ".pdf", bytes: new Uint8Array(doc.output("arraybuffer")) };
+        } catch (e) { return { name: f.name, bytes }; }
+      },
+      pickFile(accept) {
+        return new Promise((resolve) => {
+          const input = document.createElement("input"); input.type = "file"; input.accept = accept;
+          input.onchange = async () => {
+            const f = input.files[0]; if (!f) return resolve(null);
+            resolve(await this.receiptFile(f));
+          };
+          input.click();
+        });
+      },
+      /** Several files at once: JSON-free array of {name, bytes}. */
+      pickFiles(accept) {
+        return new Promise((resolve) => {
+          const input = document.createElement("input"); input.type = "file"; input.accept = accept; input.multiple = true;
+          input.onchange = async () => {
+            const out = [];
+            for (const f of input.files) out.push(await this.receiptFile(f));
+            resolve(out);
+          };
+          input.click();
+        });
+      },
+      async fetchBytes(url) {
+        const r = await fetch(url, { cache: "no-cache" });
+        if (!r.ok) throw new Error(url + ": " + r.status);
+        return new Uint8Array(await r.arrayBuffer());
+      },
+      async fetchText(url) {
+        const r = await fetch(url, { cache: "no-cache" });
+        if (!r.ok) throw new Error(url + ": " + r.status);
+        return await r.text();
+      },
+      // --- Receipt reading -----------------------------------------------------------------
+      _pdfjs: null,
+      async pdfjs() {
+        if (!this._pdfjs) {
+          const base = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/";
+          this._pdfjs = await import(base + "pdf.min.mjs");
+          this._pdfjs.GlobalWorkerOptions.workerSrc = base + "pdf.worker.min.mjs";
+        }
+        return this._pdfjs;
+      },
+      /** Text of a PDF; OCR (Tesseract.js, English + German) when it has no text layer. */
+      async receiptText(bytes) {
+        const pdfjs = await this.pdfjs();
+        const doc = await pdfjs.getDocument({ data: bytes.slice() }).promise;
+        let text = "";
+        for (let i = 1; i <= doc.numPages; i++) {
+          const page = await doc.getPage(i);
+          const content = await page.getTextContent();
+          let line = "", lastY = null;
+          for (const item of content.items) {
+            const y = item.transform[5];
+            if (lastY !== null && Math.abs(y - lastY) > 2) { text += line + "\n"; line = ""; }
+            line += (line && !line.endsWith(" ") ? " " : "") + item.str; lastY = y;
+          }
+          text += line + "\n";
+        }
+        if (text.replace(/\s/g, "").length >= 10) return JSON.stringify({ text, usedOCR: false });
+        if (!window.Tesseract) await this.script("https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js");
+        let ocr = "";
+        for (let i = 1; i <= Math.min(doc.numPages, 3); i++) {
+          const page = await doc.getPage(i);
+          const viewport = page.getViewport({ scale: 400 / 72 });
+          const canvas = document.createElement("canvas");
+          canvas.width = viewport.width; canvas.height = viewport.height;
+          await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
+          this.cleanScan(canvas);
+          const result = await Tesseract.recognize(canvas, "eng+deu", { tessedit_pageseg_mode: "4" });
+          ocr += result.data.text + "\n";
+        }
+        return JSON.stringify({ text: ocr, usedOCR: true });
+      },
+      /** Scan clean-up before OCR: grey, contrast stretch, then a local threshold, so paper
+       *  texture and creases (crumpled receipts) do not drown the print. */
+      cleanScan(canvas) {
+        const ctx = canvas.getContext("2d"), W = canvas.width, H = canvas.height;
+        const img = ctx.getImageData(0, 0, W, H), d = img.data, g = new Float32Array(W * H), hist = new Uint32Array(256);
+        for (let i = 0, j = 0; i < d.length; i += 4, j++) { const v = Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]); g[j] = v; hist[v]++; }
+        let acc = 0, lo = 0, hi = 255;
+        for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc > g.length * 0.02) { lo = v; break; } }
+        acc = 0;
+        for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc > g.length * 0.02) { hi = v; break; } }
+        const integral = new Float64Array((W + 1) * (H + 1));
+        for (let y = 0; y < H; y++) {
+          let row = 0;
+          for (let x = 0; x < W; x++) {
+            const v = Math.min(255, Math.max(0, (g[y * W + x] - lo) * 255 / Math.max(1, hi - lo)));
+            g[y * W + x] = v; row += v; integral[(y + 1) * (W + 1) + x + 1] = integral[y * (W + 1) + x + 1] + row;
+          }
+        }
+        const r = Math.max(8, Math.round(W / 40));
+        for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+          const x0 = Math.max(0, x - r), x1 = Math.min(W - 1, x + r), y0 = Math.max(0, y - r), y1 = Math.min(H - 1, y + r);
+          const sum = integral[(y1 + 1) * (W + 1) + x1 + 1] - integral[y0 * (W + 1) + x1 + 1] - integral[(y1 + 1) * (W + 1) + x0] + integral[y0 * (W + 1) + x0];
+          const v = g[y * W + x] < sum / ((x1 - x0 + 1) * (y1 - y0 + 1)) * 0.85 ? 0 : 255, k = (y * W + x) * 4;
+          d[k] = d[k + 1] = d[k + 2] = v;
+        }
+        ctx.putImageData(img, 0, 0);
+      },
+      script(src) {
+        return new Promise((resolve, reject) => {
+          const s = document.createElement("script"); s.src = src; s.onload = resolve; s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      },
+      /** "available", "downloadable", "downloading" or "unavailable" for the browser's built-in model. */
+      async aiAvailability() {
+        try { return window.LanguageModel ? await LanguageModel.availability() : "unavailable"; }
+        catch (e) { return "unavailable"; }
+      },
+      /** Downloads the browser's built-in model (needs a click); resolves to the new availability. */
+      async aiPrepare(onProgress) {
+        try {
+          const session = await LanguageModel.create({ monitor(m) {
+            m.addEventListener("downloadprogress", (e) => onProgress && onProgress(Math.round(e.loaded * 100)));
+          } });
+          session.destroy();
+        } catch (e) { console.warn("Built-in AI download failed", e); }
+        return await this.aiAvailability();
+      },
+      /** Asks the browser's built-in model (Chrome/Edge Prompt API) for the receipt fields as JSON. */
+      async aiRead(instructions, message, schema) {
+        try {
+          if (!window.LanguageModel || (await LanguageModel.availability()) === "unavailable") return "";
+          const session = await LanguageModel.create({ initialPrompts: [{ role: "system", content: instructions }] });
+          const answer = await session.prompt(message, { responseConstraint: JSON.parse(schema) });
+          session.destroy();
+          return answer;
+        } catch (e) { console.warn("Built-in AI failed", e); return ""; }
+      },
+      // --- Opt-in downloadable model (WebLLM over WebGPU) ------------------------------
+      localModelID: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+      _engine: null,
+      hasWebGPU() { return !!navigator.gpu; },
+      localModelChosen() { return localStorage.getItem("seLocalModel") === "1"; },
+      /** Downloads (once; the browser keeps it) and starts the reading model. */
+      async localModelPrepare(onProgress) {
+        if (this._engine) return true;
+        try {
+          const webllm = await import("https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.85/+esm");
+          this._engine = await webllm.CreateMLCEngine(this.localModelID, {
+            initProgressCallback: (p) => onProgress && onProgress(Math.round((p.progress || 0) * 100)),
+          });
+          localStorage.setItem("seLocalModel", "1");
+          return true;
+        } catch (e) { console.warn("Local model failed", e); return false; }
+      },
+      /** Asks the downloaded model for the receipt fields as JSON (same schema as the apps). */
+      async localModelRead(instructions, message, schema) {
+        try {
+          if (!(await this.localModelPrepare())) return "";
+          const reply = await this._engine.chat.completions.create({
+            messages: [{ role: "system", content: instructions }, { role: "user", content: message }],
+            temperature: 0, response_format: { type: "json_object", schema },
+          });
+          return reply.choices[0].message.content || "";
+        } catch (e) { console.warn("Local model read failed", e); return ""; }
+      },
+      // --- GSA counties ----------------------------------------------------------------------
+      /** Counties of US towns ("WOBURN_MA" → "Middlesex County"), kept in this browser. */
+      counties() {
+        try { return JSON.stringify(JSON.parse(localStorage.getItem("gsaCounties") || "{}")); } catch (e) { return "{}"; }
+      },
+      /** Looks up the given towns ([[key, city, state]]) with Nominatim, one a second; returns all known. */
+      async resolveCounties(json) {
+        let known = {};
+        try { known = JSON.parse(localStorage.getItem("gsaCounties") || "{}"); } catch (e) {}
+        for (const [key, city, state] of JSON.parse(json)) {
+          if (key in known) continue;
+          let answer = null;
+          try {
+            const r = await fetch("https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=us&q=" + encodeURIComponent(city + ", " + state));
+            const j = await r.json();
+            answer = (j[0] && j[0].address && j[0].address.county) || "";
+          } catch (e) { continue; }   // offline: try again later
+          known[key] = answer;
+          try { localStorage.setItem("gsaCounties", JSON.stringify(known)); } catch (e) {}
+          await new Promise(res => setTimeout(res, 1100));
+        }
+        return JSON.stringify(known);
+      },
+      // --- Car mileage --------------------------------------------------------------------
+      /** Driving distance with OpenStreetMap: Nominatim finds the addresses, OSRM the route. */
+      async routeMiles(from, to) {
+        const find = async (q) => {
+          const r = await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(q));
+          const j = await r.json();
+          if (!j.length) throw new Error("OpenStreetMap doesn’t know “" + q + "”. Check the address, or enter the miles yourself.");
+          return j[0];
+        };
+        try {
+          const a = await find(from), b = await find(to);
+          const r = await fetch(`https://router.project-osrm.org/route/v1/driving/${a.lon},${a.lat};${b.lon},${b.lat}?overview=false`);
+          const j = await r.json();
+          if (!j.routes || !j.routes.length) throw new Error("No driving route found. Enter the miles yourself.");
+          return JSON.stringify({ miles: j.routes[0].distance / 1609.344, from: a.display_name, to: b.display_name });
+        } catch (e) { return JSON.stringify({ error: String(e.message || e) }); }
+      },
+      /** A one-page document (title, label/value rows, note) as PDF bytes, like the apps draw it. */
+      async simplePDF(json) {
+        if (!window.jspdf) await this.script("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+        const d = JSON.parse(json);
+        const doc = new window.jspdf.jsPDF({ unit: "pt", format: "letter" });
+        let y = 90;
+        doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.text(d.title, 72, y); y += 36;
+        doc.setFontSize(11);
+        for (const [label, value] of d.rows) {
+          doc.setFont("helvetica", "bold"); doc.setTextColor(90); doc.text(label, 72, y);
+          doc.setFont("helvetica", "normal"); doc.setTextColor(0);
+          const lines = doc.splitTextToSize(value, 330); doc.text(lines, 210, y);
+          y += 14 * lines.length + 8;
+        }
+        y += 8; doc.setDrawColor(200); doc.line(72, y, 540, y); y += 16;
+        doc.setFontSize(9); doc.setTextColor(100);
+        const note = doc.splitTextToSize(d.note, 468); doc.text(note, 72, y); y += 12 * note.length + 6;
+        doc.text("Created by SwiftExpenses on " + new Date().toLocaleDateString("en-US", { dateStyle: "long" }), 72, y);
+        return new Uint8Array(doc.output("arraybuffer"));
+      },
+      // --- Report PDF ----------------------------------------------------------------------
+      /** Draws the report pages (jsPDF) and appends every receipt PDF (pdf-lib). */
+      async reportPDF(json, receipts, logo) {
+        if (!window.jspdf) await this.script("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+        if (!window.jspdf.jsPDF.API.autoTable) await this.script("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js");
+        if (!window.PDFLib) await this.script("https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js");
+        const r = JSON.parse(json);
+        const doc = new window.jspdf.jsPDF({ unit: "pt", format: "letter" });
+        const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 54;
+        let logoData = null;
+        if (logo && logo.length) {
+          let bin = ""; for (let i = 0; i < logo.length; i++) bin += String.fromCharCode(logo[i]);
+          logoData = "data:image/jpeg;base64," + btoa(bin);
+        }
+        const decorate = () => {
+          const pages = doc.getNumberOfPages();
+          for (let p = 1; p <= pages; p++) {
+            doc.setPage(p);
+            if (logoData) doc.addImage(logoData, "JPEG", M, 22, 108, 36);
+            doc.setFontSize(8); doc.setTextColor(115); doc.text(r.name + " - Page " + p, W / 2, H - 28, { align: "center" });
+          }
+        };
+        doc.setTextColor(0); doc.setFont("helvetica", "bold"); doc.setFontSize(18);
+        doc.text("Expense Report: " + r.name, W / 2, 110, { align: "center", maxWidth: W - 2 * M });
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.text("Generated on " + r.generated, M, 132);
+        let y = 160;
+        const section = (title) => { doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.text(title, M, y); y += 8; };
+        const table = (head, body, color, stripe, right) => {
+          doc.autoTable({ startY: y, head: [head], body, margin: { left: M, right: M, top: 86 }, theme: "grid",
+            styles: { fontSize: 7.5, cellPadding: 4, lineColor: [153, 153, 153], lineWidth: 0.5, textColor: 0 },
+            headStyles: { fillColor: color, textColor: 255, fontStyle: "bold" },
+            alternateRowStyles: { fillColor: stripe },
+            columnStyles: Object.fromEntries(right.map(i => [i, { halign: "right" }])),
+            didParseCell: (d) => { if (d.section === "body" && d.row.index === body.length - 1) d.cell.styles.fontStyle = "bold"; } });
+          y = doc.lastAutoTable.finalY + 22;
+        };
+        section("Expense Summary");
+        table(r.summaryHeaders, r.summaryRows, [79, 129, 189], [232, 238, 247], [5]);
+        if (!r.noMSIE) {
+          section("Meals & Incidental Expenses (MS&IE)");
+          table(r.msieHeaders, r.msieRows, [155, 187, 89], [242, 247, 234], [9, 11]);
+        }
+        doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+        for (const line of r.totals) { if (y > H - 70) { doc.addPage(); y = 100; } doc.text(line, W - M, y, { align: "right" }); y += 16; }
+        doc.addPage(); y = 110;
+        section("Data Sources");
+        doc.autoTable({ startY: y, head: [["Data Type", "Source", "URL", "Last Updated"]], body: r.sources, margin: { left: M, right: M, top: 86 },
+          theme: "grid", styles: { fontSize: 7.5, cellPadding: 4, lineColor: [153, 153, 153], lineWidth: 0.5, textColor: 0 },
+          headStyles: { fillColor: [128, 100, 162], textColor: 255 }, alternateRowStyles: { fillColor: [242, 240, 247] } });
+        decorate();
+        const merged = await PDFLib.PDFDocument.load(doc.output("arraybuffer"));
+        const skipped = [];
+        for (let i = 0; i < receipts.length; i++) {
+          try {
+            const src = await PDFLib.PDFDocument.load(receipts[i], { ignoreEncryption: true });
+            const pages = await merged.copyPages(src, src.getPageIndices());
+            pages.forEach(p => merged.addPage(p));
+          } catch (e) { skipped.push(r.receiptLabels[i]); }
+        }
+        const bytes = await merged.save();
+        return { bytes, skipped: JSON.stringify(skipped) };
+      },
+    };
+  </script>
+  <script type="module">
+    const status = document.getElementById("status");
+    try {
+      const candidates = [
+        new URL("./Package/", import.meta.url),
+        new URL("./.build/plugins/PackageToJS/outputs/Package/", import.meta.url),
+      ];
+      let pkg = candidates[0];
+      for (const candidate of candidates) {
+        try {
+          const probe = await fetch(new URL("index.js", candidate), { cache: "no-cache" });
+          if (probe.ok) { pkg = candidate; break; }
+        } catch (_) { /* try next */ }
+      }
+      const { init } = await import(new URL("index.js", pkg).href);
+      await init({ module: fetch(new URL("WebClientApp.wasm", pkg), { cache: "no-cache" }) });
+      status?.remove();
+    } catch (error) {
+      if (status) status.textContent = "Failed to start SwiftExpenses: " + error;
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+issuer: UNITED Airlines
+keywords:
+  - RECEIPT
+  - PAYMENT
+  - UNITED Airlines
+fields:
+  currency:
+    regex: USD
+    type: string
+  invoice_number:
+    regex: '[A-Z0-9-]{6,}'
+    type: string
+    required: false
