@@ -1,0 +1,86 @@
+{
+  "description" : "IRS standard mileage rates, business use of a personal car",
+  "last_updated" : "2026-10-07T18:59:48Z",
+  "rates" : [
+    {
+      "cents_per_mile" : 55.5,
+      "from" : "2012-01-01"
+    },
+    {
+      "cents_per_mile" : 56.5,
+      "from" : "2013-01-01",
+      "source" : "IR-2012-95"
+    },
+    {
+      "cents_per_mile" : 56,
+      "from" : "2014-01-01",
+      "source" : "IR-2013-95"
+    },
+    {
+      "cents_per_mile" : 57.5,
+      "from" : "2015-01-01",
+      "source" : "IR-2014-114"
+    },
+    {
+      "cents_per_mile" : 54,
+      "from" : "2016-01-01",
+      "source" : "IR-2015-137"
+    },
+    {
+      "cents_per_mile" : 53.5,
+      "from" : "2017-01-01",
+      "source" : "IR-2016-169"
+    },
+    {
+      "cents_per_mile" : 58,
+      "from" : "2019-01-01",
+      "source" : "IR-2018-251"
+    },
+    {
+      "cents_per_mile" : 57.5,
+      "from" : "2020-01-01",
+      "source" : "IR-2019-215"
+    },
+    {
+      "cents_per_mile" : 56,
+      "from" : "2021-01-01",
+      "source" : "IR-2020-279"
+    },
+    {
+      "cents_per_mile" : 58.5,
+      "from" : "2022-01-01",
+      "source" : "IR-2021-251"
+    },
+    {
+      "cents_per_mile" : 62.5,
+      "from" : "2022-07-01",
+      "source" : "IR-2022-124"
+    },
+    {
+      "cents_per_mile" : 65.5,
+      "from" : "2023-01-01",
+      "source" : "IR-2022-234"
+    },
+    {
+      "cents_per_mile" : 67,
+      "from" : "2024-01-01",
+      "source" : "IR-2023-239"
+    },
+    {
+      "cents_per_mile" : 70,
+      "from" : "2025-01-01",
+      "source" : "IR-2024-312"
+    },
+    {
+      "cents_per_mile" : 72.5,
+      "from" : "2026-01-01",
+      "source" : "IR-2025-128"
+    },
+    {
+      "cents_per_mile" : 76,
+      "from" : "2026-07-01",
+      "source" : "IR-2026-29"
+    }
+  ],
+  "source" : "https:\/\/www.irs.gov\/tax-professionals\/standard-mileage-rates"
+}

@@ -1,0 +1,17 @@
+issuer: DB Fernverkehr AG - Europa-Allee 78-84 - 60486 Frankfurt am Main
+fields:
+  date:
+    regex: \d{1,2}\.\d{1,2}\.\d{2,4}
+    type: date
+  amount:
+    regex: (?:Total|Summe|Gesamt|Betrag)[^0-9]*(\d{1,3}(?:[.,]\d{3})*[.,]\d{2})
+    type: float
+  currency:
+    regex: €
+    type: string
+  invoice_number:
+    regex: '[A-Z0-9-]{6,}'
+    type: string
+    required: false
+keywords:
+- DB Fernverkehr AG - Europa-Allee 78-84 - 60486 Frankfurt am Main
